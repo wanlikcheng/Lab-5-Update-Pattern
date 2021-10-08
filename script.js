@@ -49,11 +49,9 @@ let yAxis = d3.axisLeft()
 // Draw the axis
 let xAxisGroup = svg.append("g")
     .attr("class", "axis x-axis")
-    .attr("transform", `translate(0, ${height})`)
 
 let yAxisGroup = svg.append("g")
     .attr("class", "axis y-axis")
-    .attr("transform", `translate(0, ${0})`)
 
 // adding labels
 
@@ -107,12 +105,12 @@ function update(data, typeSelection) {
     let yAxis = d3.axisLeft()
         .scale(yScale)
     
-    xAxisGroup = svg.select(".axis x-axis")
-        .attr("transform", `translate(0, ${height})`)
+    xAxisGroup = svg
+        .select(".x-axis") // don't need the entire "axis x-axis"?
+        .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
     
-    let yAxisGroup = svg.select(".axis y-axis")
-        .attr("transform", `translate(0, ${0})`)
+    yAxisGroup = svg.select(".y-axis") // don't need the entire "axis y-axis"?
         .call(yAxis);
 
     d3.select(".ylabel").text(typeSelection === "stores" ? "Stores" : "Billion USD")
@@ -131,7 +129,6 @@ d3.csv('coffee-house-chains.csv', d=>{
         coffeeData = data;
         console.log('coffee data', data);
         update(coffeeData, typeSelection);
-
     })
 
 // (Later) Handling the type change
