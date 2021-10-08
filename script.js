@@ -3,9 +3,7 @@
 let coffeeData;
 
 let type = document.querySelector('#group-by');
-
 let typeSelection = "stores";
-console.log("typeSelection:", typeSelection);
 
 type.addEventListener('change', event => {
 	console.log(event);
@@ -14,6 +12,50 @@ type.addEventListener('change', event => {
     console.log("typeSelection:", typeSelection);
     update(coffeeData, typeSelection);
 })
+
+let sort = document.querySelector('#sort-order').onclick = function(){
+    console.log("bruh");
+    if (this.value == "ascending") {
+        this.value = "descending";
+        console.log(this.value);
+
+        // sort descending
+        if(typeSelection === "stores") {
+            coffeeData.sort(function(a, b) {
+                return parseFloat(b.stores) - parseFloat(a.stores);
+            });
+            console.log("Sorted descending stores: ", coffeeData);
+            update(coffeeData, typeSelection);
+        }
+        else {
+            coffeeData.sort(function(a, b) {
+                return parseFloat(b.revenue) - parseFloat(a.revenue);
+            });
+            console.log("Sorted descending revenue: ", coffeeData);
+            update(coffeeData, typeSelection);
+        }
+    }
+    else {
+        this.value = "ascending";
+        console.log(this.value);
+        // sort ascending
+        if(typeSelection === "stores") {
+            coffeeData.sort(function(a, b) {
+                return parseFloat(a.stores) - parseFloat(b.stores);
+            });
+            console.log("Sorted descending stores: ", coffeeData);
+            update(coffeeData, typeSelection);
+        }
+        else {
+            coffeeData.sort(function(a, b) {
+                return parseFloat(a.revenue) - parseFloat(b.revenue);
+            });
+            console.log("Sorted descending revenue: ", coffeeData);
+            update(coffeeData, typeSelection);
+        }
+    }
+    this.blur();
+}
 
 // margin
 const margin = ({top: 40, right: 40, bottom: 40, left: 40})
