@@ -1,7 +1,8 @@
-
 // CHART INIT ------------------------------
 let coffeeData;
+let data;
 
+// dropdown change
 let type = document.querySelector('#group-by');
 let typeSelection = "stores";
 
@@ -13,8 +14,8 @@ type.addEventListener('change', event => {
     update(coffeeData, typeSelection);
 })
 
+// sorting with button
 let sort = document.querySelector('#sort-order').onclick = function(){
-    console.log("bruh");
     if (this.value == "ascending") {
         this.value = "descending";
         console.log(this.value);
@@ -99,14 +100,15 @@ let yAxisGroup = svg.append("g")
 
 svg.append("text")
     .attr("class", "ylabel")
-    .attr('x', 0)
-    .attr('y', 0)
+    .attr('x', -12)
+    .attr('y', -3)
     .attr("alignment-baseline", "baseline")
     .text("Stores")
 
 // CHART UPDATE FUNCTION -------------------
 
 function update(data, typeSelection) {
+
 	// update domains
     xScale.domain(data.map(function(d) {
         return d.company;
@@ -118,26 +120,33 @@ function update(data, typeSelection) {
 
 	// update bars
     let bars = svg.selectAll(".bar")
-        .remove()
-        .exit()
         .data(data, d => d.company);
 
     bars
         .enter()
         .append("rect")
         .attr("class", "bar")
+        .attr("fill", "steelblue")
+        .attr("x", function(d) {
+            return xScale(d.company);
+        })
+        .attr("y", height)
+        .attr("width", xScale.bandwidth())
+        .attr("height", 0)
+        .merge(bars)
+        .transition()
+        .delay((d, i) => i * 100)
+        .duration(1000)
         .attr("x", function(d) {
             return xScale(d.company);
         })
         .attr("y", function(d) {
             return yScale(d[typeSelection]);
         })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) {
-            return height - yScale(d[typeSelection]);
-        })
-        .attr("fill", "blue");
-    
+        .attr("height", d => height - yScale(d[typeSelection]));
+
+        bars.exit().remove();
+
         
     // update axis
     let xAxis = d3.axisBottom()
@@ -172,7 +181,3 @@ d3.csv('coffee-house-chains.csv', d=>{
         console.log('coffee data', data);
         update(coffeeData, typeSelection);
     })
-
-// (Later) Handling the type change
-
-// (Later) Handling the sorting direction change
